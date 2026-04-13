@@ -5,9 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+use App\Models\Trip;
+
 class TripFile extends Model
 {
     public $fillable = [
+        'trip_id',
         'name',
         'extension',
         'mime_type',
@@ -15,16 +18,12 @@ class TripFile extends Model
         'is_public',
     ];
 
-    public $rules = [
-        'name' => 'required',
-        'extension' => 'required',
-        'mime_type' => 'required',
-        'url' => 'required',
+    protected $casts = [
+        'is_public' => 'boolean',
     ];
 
-    // RELATIONS
     public function trip(): BelongsTo
     {
-        return $this->belongsTo('trip');
+        return $this->belongsTo(Trip::class);
     }
 }

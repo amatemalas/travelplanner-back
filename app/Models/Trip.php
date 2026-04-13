@@ -5,6 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+use App\Models\Activity;
+use App\Models\TripFile;
+
 class Trip extends Model
 {
     public $fillable = [
@@ -25,6 +28,6 @@ class Trip extends Model
 
     public function files(): HasMany
     {
-        return $this->hasMany('files');
+        return $this->hasMany(TripFile::class);
     }
 }
