@@ -15,6 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware
             ->alias([
                 'ensureJsonApi' => \App\Http\Middleware\EnsureJsonApiRequest::class,
+                'auth.api' => \App\Http\Middleware\AuthenticateApiToken::class,
             ])
             ->api(append: ['ensureJsonApi']);
     })

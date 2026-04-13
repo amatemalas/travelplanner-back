@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Activity extends Model
 {
@@ -15,4 +16,9 @@ class Activity extends Model
         'price',
         'time_start',
     ];
+
+    public function trip(): BelongsTo
+    {
+        return $this->belongsTo(Trip::class);
+    }
 }
