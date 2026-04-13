@@ -11,19 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('trips', function (Blueprint $table) {
+        Schema::create('trip_files', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')
+            $table->foreignId('trip_id')
                 ->constrained()
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
-            $table->string('uuid')->unique();
-            $table->string('title');
-            $table->string('destination');
-            $table->string('image');
-            $table->date('start_date');
-            $table->date('end_date');
-            $table->decimal('budget');
+            $table->string('name');
+            $table->string('extension');
+            $table->string('mime_type');
+            $table->string('url');
+            $table->boolean('is_public')->default(false);
             $table->timestamps();
         });
     }
@@ -33,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('trips');
+        Schema::dropIfExists('trip_files');
     }
 };

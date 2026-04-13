@@ -11,19 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('trips', function (Blueprint $table) {
+        Schema::create('activities', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')
+            $table->foreignId('trip_id')
                 ->constrained()
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
-            $table->string('uuid')->unique();
             $table->string('title');
-            $table->string('destination');
-            $table->string('image');
-            $table->date('start_date');
-            $table->date('end_date');
-            $table->decimal('budget');
+            $table->string('location_url')->nullable();
+            $table->text('description')->nullable();
+            $table->integer('day');
+            $table->decimal('price')->default(0);
+            $table->timestamp('time_start');
             $table->timestamps();
         });
     }
@@ -33,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('trips');
+        Schema::dropIfExists('activities');
     }
 };
