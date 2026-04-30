@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\TripResource;
 use App\Models\Trip;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class TripController extends Controller
@@ -18,7 +20,7 @@ class TripController extends Controller
             $trips = Trip::where('user_id', auth()->id())->get();
 
             return response()->json([
-                'data' => $trips,
+                'data' => TripResource::collection($trips),
                 'action' => self::class . '@index',
                 'error' => false,
             ]);
@@ -39,11 +41,15 @@ class TripController extends Controller
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'destination' => ['required', 'string', 'max:255'],
-            'image' => ['required', 'string', 'max:2048'],
+            'image' => ['required'],
             'start_date' => ['required', 'date'],
             'end_date' => ['required', 'date', 'after_or_equal:start_date'],
             'budget' => ['required', 'numeric', 'min:0'],
         ]);
+
+        if ($request->has('image') && $request->file('image')->isValid()) {
+            $validated['image'] = Storage::put('trip_images', $request->file('image'));
+        }
 
         $trip = Trip::create(array_merge($validated, [
             'user_id' => auth()->id(),
@@ -71,7 +77,7 @@ class TripController extends Controller
         }
 
         return response()->json([
-            'data' => $trip,
+            'data' => TripResource::make($trip->load(['activities', 'files'])),
             'action' => self::class . '@show',
             'error' => false,
         ]);
@@ -99,10 +105,14 @@ class TripController extends Controller
             'budget' => ['sometimes', 'required', 'numeric', 'min:0'],
         ]);
 
+        if ($request->has('image') && $request->file('image')->isValid()) {
+            $validated['image'] = Storage::put('trip_images', $request->file('image'));
+        }
+
         $trip->update($validated);
 
         return response()->json([
-            'data' => $trip,
+            'data' => TripResource::make($trip->load(['activities', 'files'])),
             'action' => self::class . '@update',
             'error' => false,
         ]);

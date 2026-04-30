@@ -18,6 +18,12 @@ return Application::configure(basePath: dirname(__DIR__))
                 'auth.api' => \App\Http\Middleware\AuthenticateApiToken::class,
             ])
             ->api(append: ['ensureJsonApi']);
+
+        $middleware->validateCsrfTokens(except: [
+            'api/*',
+        ]);
+
+        $middleware->statefulApi();
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
