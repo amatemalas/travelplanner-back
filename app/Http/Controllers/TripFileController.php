@@ -10,6 +10,36 @@ use Illuminate\Support\Facades\Storage;
 
 class TripFileController extends Controller
 {
+    public function show(TripFile $tripFile): JsonResponse
+    {
+        if ($tripFile->trip->user_id !== auth()->id()) {
+            return response()->json([
+                'message' => 'You are not authorized to view this file.',
+                'error' => true,
+            ], 403);
+        }
+
+        return response()->json([
+            'data' => $tripFile,
+            'message' => 'File retrieved successfully.',
+            'error' => false,
+        ]);
+    }
+
+    public function download(TripFile $tripFile)
+    {
+        if ($tripFile->trip->user_id !== auth()->id()) {
+            return response()->json([
+                'message' => 'You are not authorized to download this file.',
+                'error' => true,
+            ], 403);
+        }
+
+        $filename = $tripFile->name . '.' . $tripFile->extension;
+
+        return Storage::disk('local')->download($tripFile->url, $filename);
+    }
+
     /**
      * Store a newly created resource in storage.
      */

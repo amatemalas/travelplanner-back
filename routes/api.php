@@ -14,6 +14,7 @@ Route::middleware('auth.api')->group(function () {
 
     Route::apiResource('trips', TripController::class);
     Route::apiResource('activities', ActivityController::class);
-    Route::apiResource('trip-files', TripFileController::class)->except(['index', 'show']);
+    Route::apiResource('trip-files', TripFileController::class)->except(['index']);
+    Route::get('trip-files/{tripFile}/download', [TripFileController::class, 'download']);
 
 });
